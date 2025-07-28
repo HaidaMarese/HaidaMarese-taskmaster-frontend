@@ -11,17 +11,19 @@ function SignInPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    try {
-      const res = await backendClient.post("/users/login", formData);
-      localStorage.setItem("task-token", res.data.token); 
-      navigate("/dashboard");
-    } catch (err) {
-      console.error(err);
-      setError("Invalid email or password.");
-    }
-  };
+  e.preventDefault();
+  setError("");
+  try {
+    const res = await backendClient.post("/users/login", formData);
+    localStorage.setItem("task-token", res.data.token);
+    console.log("Saved token:", res.data.token); 
+    navigate("/dashboard");
+  } catch (err) {
+    console.error(err);
+    setError("Invalid email or password.");
+  }
+};
+
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-100 pt-20 px-4">
