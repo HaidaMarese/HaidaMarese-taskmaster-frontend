@@ -20,16 +20,22 @@ function DashboardPage() {
 
   const fetchData = async () => {
     try {
-      const [projectRes, taskRes] = await Promise.all([
-        backendClient.get("/projects", {
+      const projectRes = await backendClient.get("/projects", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const projects = projectRes.data;
+      setProjects(projects);
+
+      if (projects.length > 0) {
+        const projectId = projects[0]._id;
+        const taskRes = await backendClient.get(`/projects/${projectId}/tasks`, {
           headers: { Authorization: `Bearer ${token}` },
-        }),
-        backendClient.get("/tasks", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-      ]);
-      setProjects(projectRes.data);
-      setTasks(taskRes.data);
+        });
+        setTasks(taskRes.data);
+      } else {
+        setTasks([]);
+      }
     } catch (err) {
       console.error("Error fetching data:", err);
     } finally {
